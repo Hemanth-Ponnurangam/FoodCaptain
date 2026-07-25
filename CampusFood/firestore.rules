@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // NOTE: There's no Firebase Auth here — login is just a name/password
+    // check done in app.js against this collection. That means these rules
+    // have to allow open read/write for sign up and login to work at all.
+    // Anyone with your Firebase config (which is public in any web app)
+    // can read every stored name/password and overwrite any user's record.
+    // Fine for a low-stakes campus tool; don't put anything sensitive
+    // (real passwords people reuse elsewhere, personal data) behind this.
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+  }
+}
