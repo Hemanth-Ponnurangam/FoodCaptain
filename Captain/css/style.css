@@ -1,120 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap');
+
 :root {
-    --primary-color: #4CAF50;
-    --bg-color: #f4f4f9;
-    --text-color: #333;
+    --primary-green: #0d4734; /* The deep FinHQ green */
+    --accent-green: #e6f0eb;
+    --bg-color: #f7f9f8;
+    --text-dark: #112a20;
+    --text-muted: #5b7067;
+    --card-bg: #ffffff;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
-    color: var(--text-color);
+    color: var(--text-dark);
     margin: 0;
     padding: 20px;
+    display: flex;
+    justify-content: center;
 }
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 600px; /* Slimmer, more app-like feel */
+}
+
+/* Typography */
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-green);
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
 }
 
 .hidden {
     display: none !important;
 }
 
+/* Header */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* Cards & Sections */
+section {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    margin-bottom: 25px;
+}
+
+/* Inputs & Buttons */
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0 16px;
+    border: 1px solid #d1dcd7;
+    border-radius: 12px;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    background-color: #fafbfc;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    background-color: #fff;
 }
 
 button {
-    background-color: var(--primary-color);
+    background-color: var(--primary-green);
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 12px 20px;
     cursor: pointer;
-    border-radius: 4px;
-    font-weight: bold;
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    transition: background-color 0.2s;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #093627;
 }
 
-/* Menu Cards */
+#logout-btn {
+    width: auto;
+    padding: 8px 16px;
+    background-color: var(--accent-green);
+    color: var(--primary-green);
+}
+
+/* Menu Options Container */
 .menu-options {
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    gap: 15px;
     margin-top: 20px;
 }
 
 .option-card {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 8px;
-    flex: 1;
-    text-align: center;
-}
-
-.option-card.special {
-    border-color: #ff9800;
-    background-color: #fffdf9;
-}
-
-/* Progress Bar */
-.progress-container {
-    margin-top: 15px;
-    text-align: left;
-    font-size: 0.9em;
-}
-
-.progress-bar {
-    width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 4px;
-    height: 10px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background-color: #ff9800;
-    width: 0%; /* Updates via JS */
-    transition: width 0.3s ease;
-}
-
-/* Ticket UI */
-.ticket {
-    background: #fff9e6;
-    border: 2px dashed #888;
-    width: 300px;
-    margin: 20px auto;
+    border: 1px solid #d1dcd7;
     padding: 20px;
-    font-family: 'Courier New', Courier, monospace;
-    position: relative;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.ticket-header {
-    text-align: center;
-    border-bottom: 1px solid #888;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
+.option-card h3 {
+    margin-top: 0;
 }
 
-.ticket-footer {
-    border-top: 1px solid #888;
+.option-card button {
     margin-top: 15px;
-    padding-top: 10px;
-    text-align: right;
-    font-weight: bold;
 }
 
 /* Stats Table */
@@ -122,14 +142,16 @@ button:hover {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
+    font-size: 0.9rem;
 }
 
 .stats-table th, .stats-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
+    padding: 12px;
     text-align: left;
+    border-bottom: 1px solid #edf2f0;
 }
 
 .stats-table th {
-    background-color: #f8f8f8;
+    color: var(--primary-green);
+    font-weight: 600;
 }
