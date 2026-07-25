@@ -3,22 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - CampusFood</title>
+    <title>Campus Food Manager</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Firebase SDKs -->
     <script type="module" src="js/app.js" defer></script>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>CampusFood</h1>
-            <div id="user-info">
+            <div id="user-info" class="hidden">
                 <button id="logout-btn">Sign Out</button>
             </div>
         </header>
 
-        <section id="dashboard-section">
+        <!-- Login Section -->
+        <section id="login-section">
+            <h2>Sign In</h2>
+            <p>Welcome back. Please sign in to cast your meal vote.</p>
+            <input type="email" id="login-email" placeholder="Email Address">
+            <input type="password" id="login-password" placeholder="Password">
+            <button id="login-btn">Log In</button>
+            <a href="#" id="show-signup" class="auth-link">Don't have an account? Sign Up</a>
+        </section>
+
+        <!-- Sign-Up Section (Hidden by default) -->
+        <section id="signup-section" class="hidden">
+            <h2>Create Account</h2>
+            <p>Sign up to manage your holiday meal selections.</p>
+            <input type="email" id="signup-email" placeholder="Email Address">
+            <input type="password" id="signup-password" placeholder="Password (min 6 characters)">
+            <button id="signup-btn">Sign Up</button>
+            <a href="#" id="show-login" class="auth-link">Already have an account? Sign In</a>
+        </section>
+
+        <!-- Dashboard / Voting Section -->
+        <section id="dashboard-section" class="hidden">
             <h2>Today's Dinner</h2>
             <p>Deadline: 4:00 PM</p>
+            
             <div class="menu-options">
                 <div class="option-card">
                     <h3>Usual Menu</h3>
@@ -26,23 +49,27 @@
                     <p><strong>Rs. 65.00</strong></p>
                     <button class="vote-btn" data-type="usual">Select Usual</button>
                 </div>
+
                 <div class="option-card special">
                     <h3>Chicken Biryani</h3>
                     <p>Requires a minimum of 10 votes.</p>
                     <p><strong>Rs. 125.00</strong></p>
                     <button class="vote-btn" data-type="special">Vote for Biryani</button>
-                    <div class="progress-container" style="margin-top:15px; font-size: 14px;">
+                    
+                    <div class="progress-container">
                         <p style="margin-bottom:5px;">Votes: <span id="current-votes">0</span> / 10</p>
-                        <div class="progress-bar" style="background:#e6f0eb; height:8px; border-radius:4px;">
-                            <div class="progress-fill" id="vote-progress" style="background:var(--primary-green); height:100%; width:0%; border-radius:4px;"></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="vote-progress"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Canteen Stats Section -->
         <section id="stats-section">
             <h2>Live Prep Stats</h2>
+            <p>Real-time headcount for the canteen team.</p>
             <table class="stats-table">
                 <thead>
                     <tr>
