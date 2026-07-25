@@ -94,6 +94,7 @@ h2 {
 }
 
 /* --- Forms & Inputs --- */
+input[type="text"],
 input[type="email"],
 input[type="password"] {
   width: 100%;
