@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodHQ</title>
+
+  <!-- Premium Typography: Playfair Display for headings, Inter for UI text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1 class="logo">FoodHQ</h1>
+    <div id="header-actions" class="header-actions hidden">
+      <button id="calendar-btn" class="icon-btn" title="Weekly calendar" aria-label="Open weekly calendar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      </button>
+      <button id="logout-btn" class="btn-secondary">Log Out</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- View 1: Login -->
+    <section id="login-view" class="spa-view">
+      <div class="card">
+        <h2>Sign In</h2>
+        <p class="subtitle">Welcome back. Please sign in to continue.</p>
+
+        <p id="login-error" class="form-error hidden"></p>
+
+        <form id="login-form">
+          <input type="text" id="login-name" placeholder="Full Name" required>
+          <input type="password" id="login-password" placeholder="Password" required>
+          <button type="submit" class="btn-primary">Log In</button>
+        </form>
+
+        <a href="#" class="auth-link" onclick="switchTab('signup'); return false;">Don't have an account? Sign Up</a>
+      </div>
+    </section>
+
+    <!-- View 2: Sign Up -->
+    <section id="signup-view" class="spa-view hidden">
+      <div class="card">
+        <h2>Sign Up</h2>
+        <p class="subtitle">Create an account to get started.</p>
+
+        <p id="signup-error" class="form-error hidden"></p>
+
+        <form id="signup-form">
+          <input type="text" id="signup-name" placeholder="Full Name" required>
+          <input type="password" id="signup-password" placeholder="Password" required minlength="3">
+          <button type="submit" class="btn-primary">Sign Up</button>
+        </form>
+
+        <a href="#" class="auth-link" onclick="switchTab('login'); return false;">Already have an account? Log In</a>
+      </div>
+    </section>
+
+    <!-- View 3: Home -->
+    <section id="home-view" class="spa-view hidden">
+      <div class="card home-card">
+        <div class="home-header">
+          <div>
+            <h2>Welcome<span id="home-username"></span></h2>
+            <p class="subtitle">You're logged in.</p>
+          </div>
+        </div>
+
+        <div id="session-banner" class="session-banner">
+          <span id="session-banner-label">Loading session…</span>
+        </div>
+
+        <!-- Weekly calendar overlay -->
+        <div id="calendar-overlay" class="calendar-overlay hidden">
+          <div class="calendar-panel">
+            <div class="calendar-panel-header">
+              <h3>This Week</h3>
+              <button id="calendar-close-btn" class="icon-btn" aria-label="Close calendar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <p class="subtitle">Dinners and all Sunday meals need a vote. Everything else runs as usual — no action needed.</p>
+            <div id="calendar-grid" class="calendar-grid"></div>
+          </div>
+        </div>
+
+        <div id="session-locked-message" class="session-locked-message hidden">
+          <p>This is a regular canteen session — no vote needed. Just show up!</p>
+        </div>
+
+        <div id="vote-and-stats">
+        <div id="usual-menu-detail" class="usual-menu-box"></div>
+
+        <div class="vote-section" id="vote-section">
+          <h3>Cast Your Vote</h3>
+          <p class="subtitle">Choose your base meal, then add any extras you want. You can change your vote anytime before the cutoff.</p>
+
+          <p id="cutoff-banner" class="cutoff-banner hidden"></p>
+          <p id="vote-error" class="form-error hidden"></p>
+          <p id="vote-confirmation" class="vote-confirmation hidden"></p>
+
+          <form id="vote-form">
+            <div class="vote-options" id="vote-options">
+              <!-- Populated in app.js from menu-data.js: Usual Menu, priced Other Options, Skip -->
+            </div>
+            <button type="submit" class="btn-primary">Submit Vote</button>
+          </form>
+        </div>
+
+        <div class="vote-section ticket-section hidden" id="ticket-section">
+          <h3>Order Locked</h3>
+          <p class="subtitle">Voting has closed for this session. Here's your final ticket.</p>
+          <div id="ticket-body"></div>
+        </div>
+
+        <div class="stats-section">
+          <h3>Live Prep Stats</h3>
+          <p class="subtitle">Real-time headcount for the canteen team.</p>
+
+          <table class="stats-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="stats-body">
+              <tr><td colspan="2">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/firebase-config.js" type="module"></script>
+  <script src="js/app.js" type="module"></script>
+</body>
+</html>
