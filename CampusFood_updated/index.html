@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodHQ</title>
+
+  <!-- Premium Typography: Playfair Display for headings, Inter for UI text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1 class="logo">Food<span class="logo-hq">HQ</span></h1>
+    <div id="header-actions" class="header-actions hidden">
+      <button id="calendar-btn" class="icon-btn hidden" title="Weekly calendar" aria-label="Open weekly calendar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      </button>
+      <button id="logout-btn" class="btn-secondary">Log Out</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- View 1: Login -->
+    <section id="login-view" class="spa-view">
+      <div class="card">
+        <h2>Sign In</h2>
+        <p class="subtitle">Welcome back. Please sign in to continue.</p>
+
+        <p id="login-error" class="form-error hidden"></p>
+
+        <form id="login-form">
+          <input type="text" id="login-name" placeholder="Full Name" required>
+          <input type="password" id="login-password" placeholder="Password" required>
+          <button type="submit" class="btn-primary">Log In</button>
+        </form>
+
+        <a href="#" class="auth-link" onclick="switchTab('signup'); return false;">Don't have an account? Sign Up</a>
+      </div>
+    </section>
+
+    <!-- View 2: Sign Up -->
+    <section id="signup-view" class="spa-view hidden">
+      <div class="card">
+        <h2>Sign Up</h2>
+        <p class="subtitle">Create an account to get started.</p>
+
+        <p id="signup-error" class="form-error hidden"></p>
+
+        <form id="signup-form">
+          <input type="text" id="signup-name" placeholder="Full Name" required>
+          <input type="password" id="signup-password" placeholder="Password" required minlength="3">
+
+          <div class="role-picker">
+            <label class="role-option">
+              <input type="radio" name="signup-role" value="employee" checked>
+              <span>Employee</span>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="signup-role" value="chef">
+              <span>Chef</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-primary">Sign Up</button>
+        </form>
+
+        <a href="#" class="auth-link" onclick="switchTab('login'); return false;">Already have an account? Log In</a>
+      </div>
+    </section>
+
+    <!-- View 3: Employee Home -->
+    <section id="home-view" class="spa-view hidden">
+      <div class="card home-card">
+        <div class="home-header">
+          <div>
+            <h2>Welcome<span id="home-username"></span></h2>
+            <p class="subtitle">You're logged in.</p>
+          </div>
+        </div>
+
+        <div id="session-banner" class="session-banner">
+          <span id="session-banner-label">Loading session…</span>
+        </div>
+
+        <!-- Weekly calendar overlay -->
+        <div id="calendar-overlay" class="calendar-overlay hidden">
+          <div class="calendar-panel">
+            <div class="calendar-panel-header">
+              <h3 id="calendar-week-label">This Week</h3>
+              <button id="calendar-close-btn" class="icon-btn" aria-label="Close calendar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <div class="calendar-week-nav">
+              <button type="button" id="calendar-week-prev" class="btn-secondary calendar-week-nav-btn">&larr; Prev week</button>
+              <button type="button" id="calendar-week-today" class="btn-secondary calendar-week-nav-btn">This week</button>
+              <button type="button" id="calendar-week-next" class="btn-secondary calendar-week-nav-btn">Next week &rarr;</button>
+            </div>
+            <p class="subtitle">Dinners and all Sunday meals need a vote. Everything else runs as usual — no action needed.</p>
+            <div id="calendar-grid" class="calendar-grid"></div>
+          </div>
+        </div>
+
+        <div id="session-locked-message" class="session-locked-message hidden">
+          <p>This is a regular canteen session — no vote needed. Just show up!</p>
+        </div>
+
+        <div id="vote-and-stats">
+
+        <div class="session-subtabs" role="tablist">
+          <button type="button" class="session-subtab-btn active" data-session-tab="ticket" role="tab">Ticket</button>
+          <button type="button" class="session-subtab-btn" data-session-tab="preference" role="tab">Preference (Voting)</button>
+          <button type="button" class="session-subtab-btn" data-session-tab="headcount" role="tab">Headcounts</button>
+        </div>
+
+        <div id="session-tab-ticket" class="session-tab-panel">
+          <div class="vote-section ticket-section" id="ticket-section">
+            <h3 id="ticket-title">Your Ticket</h3>
+            <p id="ticket-subtitle" class="subtitle"></p>
+            <div id="ticket-body"></div>
+          </div>
+        </div>
+
+        <div id="session-tab-preference" class="session-tab-panel hidden">
+          <div id="usual-menu-detail" class="usual-menu-box"></div>
+
+          <div class="vote-section" id="vote-section">
+            <h3>Cast Your Vote</h3>
+            <p class="subtitle">Choose EITHER a Primary preference (regular menu / skip) OR an Other Main Dish — not both. If you pick an Other Main Dish, set a Secondary preference so we know what to do if it doesn't meet quota. Side dish is always optional. You can change your vote anytime until the Chef freezes the count.</p>
+
+            <p id="cutoff-banner" class="cutoff-banner hidden"></p>
+            <p id="vote-error" class="form-error hidden"></p>
+            <p id="vote-confirmation" class="vote-confirmation hidden"></p>
+
+            <form id="vote-form">
+              <div class="vote-options" id="vote-options">
+                <!-- Populated in app.js from live config, as 4 mutually-
+                     aware dropdowns:
+                     1) Primary Preference (Regular Menu / Skip) — optional
+                     2) Other Main Dish — optional, disables/clears #1 and
+                        vice versa so the two are never mixed
+                     3) Secondary Preference (Regular / Skip) — mandatory
+                        only when #2 is a threshold item
+                     4) Side Dish — optional, independent of #1/#2 -->
+              </div>
+
+              <button type="submit" class="btn-primary">Submit Vote</button>
+            </form>
+          </div>
+        </div>
+
+        <div id="session-tab-headcount" class="session-tab-panel hidden">
+          <div class="stats-section">
+            <h3>Live Prep Stats</h3>
+            <p class="subtitle">Real-time headcount for the canteen team.</p>
+
+            <table class="stats-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody id="stats-body">
+                <tr><td colspan="2">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- View 4: Chef Dashboard -->
+    <section id="chef-view" class="spa-view hidden">
+      <div class="card home-card">
+        <div class="home-header">
+          <div>
+            <h2>Chef Dashboard<span id="chef-username"></span></h2>
+            <p class="subtitle">Manage sessions, the menu, prices, and headcount freezes.</p>
+          </div>
+        </div>
+
+        <div class="chef-subtabs" role="tablist">
+          <button type="button" class="chef-subtab-btn active" data-chef-tab="sessions" role="tab">Sessions</button>
+          <button type="button" class="chef-subtab-btn" data-chef-tab="menu" role="tab">Menu, Price &amp; Deadlines</button>
+          <button type="button" class="chef-subtab-btn" data-chef-tab="headcount" role="tab">Headcount</button>
+        </div>
+
+        <div id="chef-tab-sessions" class="chef-tab-panel">
+          <div class="chef-section">
+            <div class="chef-week-nav">
+              <h3 id="chef-week-label">Sessions This Week</h3>
+              <div class="chef-week-nav-btns">
+                <button type="button" id="chef-week-prev" class="btn-secondary chef-week-nav-btn">&larr; Prev week</button>
+                <button type="button" id="chef-week-today" class="btn-secondary chef-week-nav-btn">This week</button>
+                <button type="button" id="chef-week-next" class="btn-secondary chef-week-nav-btn">Next week &rarr;</button>
+              </div>
+            </div>
+            <p class="subtitle">Tick a session to make it eligible for voting (or untick to turn it off), then click it to jump to its Headcount stats.</p>
+            <p id="chef-eligibility-error" class="chef-inline-error hidden"></p>
+            <div id="chef-calendar-grid" class="chef-calendar-grid"></div>
+          </div>
+        </div>
+
+        <div id="chef-tab-menu" class="chef-tab-panel hidden">
+          <div class="chef-section">
+            <h3>Deadlines</h3>
+            <p class="subtitle">General cutoff time per session type. The Chef can still freeze a session by hand before this.</p>
+            <form id="chef-cutoff-form" class="chef-inline-form">
+              <label>Breakfast <input type="time" id="cutoff-breakfast" required></label>
+              <p class="chef-cutoff-note">Breakfast's deadline falls the evening before (this time applies to the previous day).</p>
+              <label>Lunch <input type="time" id="cutoff-lunch" required></label>
+              <label>Dinner <input type="time" id="cutoff-dinner" required></label>
+              <button type="submit" class="btn-primary">Save Deadlines</button>
+            </form>
+            <p id="chef-cutoff-saved" class="chef-saved-note hidden">Saved.</p>
+          </div>
+
+          <div class="chef-section">
+            <h3>Base Prices</h3>
+            <form id="chef-prices-form" class="chef-inline-form">
+              <label>Breakfast Rs <input type="number" min="0" id="price-breakfast" required></label>
+              <label>Lunch Rs <input type="number" min="0" id="price-lunch" required></label>
+              <label>Dinner Rs <input type="number" min="0" id="price-dinner" required></label>
+              <button type="submit" class="btn-primary">Save Prices</button>
+            </form>
+            <p id="chef-prices-saved" class="chef-saved-note hidden">Saved.</p>
+          </div>
+
+          <div class="chef-section">
+            <h3>Regular Menu</h3>
+            <p class="subtitle">Edit the day-by-day "usual" dishes shown to employees.</p>
+            <div class="chef-inline-form">
+              <label>Day
+                <select id="menu-day-select">
+                  <option value="1">Monday</option>
+                  <option value="2">Tuesday</option>
+                  <option value="3">Wednesday</option>
+                  <option value="4">Thursday</option>
+                  <option value="5">Friday</option>
+                  <option value="6">Saturday</option>
+                  <option value="0">Sunday</option>
+                </select>
+              </label>
+              <label>Session
+                <select id="menu-session-select">
+                  <option value="Breakfast">Breakfast</option>
+                  <option value="Lunch">Lunch</option>
+                  <option value="Dinner">Dinner</option>
+                </select>
+              </label>
+            </div>
+            <textarea id="menu-items-textarea" rows="3" placeholder="Comma-separated dish names"></textarea>
+            <button id="menu-items-save-btn" class="btn-primary" type="button">Save This Menu</button>
+            <p id="chef-menu-saved" class="chef-saved-note hidden">Saved.</p>
+          </div>
+
+          <div class="chef-section">
+            <h3>Other Items</h3>
+            <p class="subtitle">Optional add-ons. Check "Needs 10+ votes" for special mains that require a headcount minimum.</p>
+            <div id="extras-editor-rows" class="extras-editor-rows"></div>
+            <button id="extras-add-btn" class="btn-secondary" type="button">+ Add Item</button>
+            <button id="extras-save-btn" class="btn-primary" type="button">Save Other Items</button>
+            <p id="chef-extras-saved" class="chef-saved-note hidden">Saved.</p>
+          </div>
+        </div>
+
+        <div id="chef-tab-headcount" class="chef-tab-panel hidden">
+          <div class="chef-section">
+            <p id="chef-headcount-empty" class="subtitle">Select a session on the Sessions tab to see its headcount here.</p>
+
+            <div id="chef-freeze-panel" class="hidden">
+              <div class="chef-headcount-header">
+                <div>
+                  <h3 id="chef-freeze-title">Session</h3>
+                  <p id="chef-freeze-subtitle" class="subtitle"></p>
+                </div>
+                <button id="chef-headcount-export-btn" class="btn-secondary" type="button">Download Excel</button>
+              </div>
+
+              <table class="stats-table">
+                <thead><tr><th>Item</th><th>Count</th></tr></thead>
+                <tbody id="chef-stats-body"><tr><td colspan="2">Select a session above</td></tr></tbody>
+              </table>
+
+              <div class="chef-freeze-actions">
+                <button id="chef-freeze-btn" class="btn-primary" type="button">Freeze Headcount</button>
+                <button id="chef-unfreeze-btn" class="btn-secondary hidden" type="button">Reopen Voting</button>
+              </div>
+              <p id="chef-freeze-status" class="chef-freeze-status"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.1/dist/xlsx.full.min.js"></script>
+  <script src="js/firebase-config.js" type="module"></script>
+  <script src="js/app.js" type="module"></script>
+  <script src="js/chef.js" type="module"></script>
+</body>
+</html>
